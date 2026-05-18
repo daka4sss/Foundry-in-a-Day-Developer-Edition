@@ -58,7 +58,7 @@ def main():
     print(f"   ID:      {agent.id}")
     print(f"   Version: {agent.version}")
     print(f"   Model:   {MODEL_DEPLOYMENT}")
-    print(f"\n💡 次のステップ: chat_with_agent.py でエージェントと対話してみましょう")
+    print(f"\n💡 次のステップ: 02_chat_with_agent.py でエージェントと対話してみましょう")
 
 
 if __name__ == "__main__":
