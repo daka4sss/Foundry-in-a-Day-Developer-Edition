@@ -204,10 +204,10 @@ AZURE_TENANT_ID="<YOUR-TENANT-ID>"
 
 ### 1.4 Prompt Agent の作成 (SDK)
 
-`src/agent_x/create_agent.py` を実行して Foundry 上に Prompt Agent を作成します。
+`src/agent_x/01_create_agent.py` を実行して Foundry 上に Prompt Agent を作成します。
 
 ```powershell
-python src/agent_x/create_agent.py
+python src/agent_x/01_create_agent.py
 ```
 
 **✅ 期待される出力:**
@@ -218,7 +218,7 @@ python src/agent_x/create_agent.py
    Version: 1
    Model:   gpt-4.1-mini
 
-💡 次のステップ: chat_with_agent.py でエージェントと対話してみましょう
+💡 次のステップ: 02_chat_with_agent.py でエージェントと対話してみましょう
 ```
 
 **ポイント解説:**
@@ -232,7 +232,7 @@ python src/agent_x/create_agent.py
 作成したエージェントに対して SDK 経由でメッセージを送信します。
 
 ```powershell
-python src/agent_x/chat_with_agent.py
+python src/agent_x/02_chat_with_agent.py
 ```
 
 **✅ 期待される出力例:**
@@ -280,9 +280,9 @@ Agent X は **Zava カスタマーサポートの専門エージェント** で�
 > 💡 **MAF とは?**: Microsoft Agent Framework はエージェントの構築・ホスティングを行うフレームワークです。  
 > ツール定義 + LLM クライアント + 指示文を一つの Agent オブジェクトにまとめ、HTTP サーバーとして公開できます。
 
-### 2.2 コード解説: main.py
+### 2.2 コード解説: 03_agent_x_server.py
 
-`src/agent_x/main.py` を VS Code で開いて構造を確認します。
+`src/agent_x/03_agent_x_server.py` を VS Code で開いて構造を確認します。
 
 ```python
 from agent_framework import Agent, tool          # MAF コア
@@ -317,14 +317,14 @@ def search_order_history(
 - `Annotated[str, Field(description="...")]` — LLM に引数の説明を伝える
 - docstring — LLM がツール選択時に参照する説明文
 
-> 💡 **ハンズオン**: `src/agent_x/main.py` のツール部分を確認し、追加のツールを実装してみましょう。
+> 💡 **ハンズオン**: `src/agent_x/03_agent_x_server.py` のツール部分を確認し、追加のツールを実装してみましょう。
 
 ### 2.4 ローカルでの実行とテスト
 
 **ターミナル 1** でサーバーを起動:
 
 ```powershell
-python src/agent_x/main.py
+python src/agent_x/03_agent_x_server.py
 ```
 
 **✅ 期待される出力:**
@@ -398,10 +398,10 @@ async with AzureCliCredential(tenant_id=TENANT_ID) as credential:
 
 ### 3.2 デモ: 実際に呼び出してみる
 
-`src/agent_x/chat_with_agent_maf.py` を実行:
+`src/agent_x/04_chat_with_agent_maf.py` を実行:
 
 ```powershell
-python src/agent_x/chat_with_agent_maf.py
+python src/agent_x/04_chat_with_agent_maf.py
 ```
 
 **✅ 期待される出力例:**
@@ -486,7 +486,7 @@ Get-NetTCPConnection -LocalPort 8088 -ErrorAction SilentlyContinue
 Get-NetTCPConnection -LocalPort 8088 | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force }
 
 # サーバーを再起動
-python src/agent_x/main.py
+python src/agent_x/03_agent_x_server.py
 ```
 
 ### エラー: `az ai project create` で `'ai' is misspelled or not recognized by the system.`
@@ -515,7 +515,7 @@ pip list | Select-String "agent-framework"
 **解決方法**:
 1. Ctrl+C でサーバーを停止
 2. `python scripts/patch_responses.py` を実行
-3. サーバーを再起動: `python src/agent_x/main.py`
+3. サーバーを再起動: `python src/agent_x/03_agent_x_server.py`
 
 ### エラー: `AuthorizationFailed` / `does not have authorization to perform action`
 
