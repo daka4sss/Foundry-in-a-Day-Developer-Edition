@@ -347,7 +347,8 @@ YYYY-MM-DD ... INFO hypercorn.error: Running on http://0.0.0.0:8088 (CTRL + C to
 # 注文履歴の検索テスト
 $body = '{"input": "顧客ID: C001 の注文履歴を教えて", "model": "gpt-4.1-mini"}'
 $bytes = [System.Text.Encoding]::UTF8.GetBytes($body)
-(Invoke-WebRequest -Uri http://localhost:8088/responses -Method POST -ContentType "application/json" -Body $bytes -TimeoutSec 60).Content | ConvertFrom-Json | ConvertTo-Json -Depth 5
+$result = [System.Text.UTF8Encoding]::UTF8.GetString($response.RawContentStream.ToArray()) | ConvertFrom-Json
+$result | ConvertTo-Json -Depth 5
 ```
 
 > 💡 日本語を含む JSON を送る際は `[System.Text.Encoding]::UTF8.GetBytes()` で変換が必要です。  

@@ -55,6 +55,7 @@
 |---|---|---|---|
 | `python: command not found` (Windows) | PATH 未設定 | `py -3.11` を使うか PATH を追加 | setup |
 | `uv pip install` が SSL エラー | 社内証明書 | `REQUESTS_CA_BUNDLE` に社内 CA を指定 | setup |
+| `.venv/script/activate` でスクリプト実行が無効 | Execution Policy | `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force` を実行 | setup |
 | | | | |
 
 ---
