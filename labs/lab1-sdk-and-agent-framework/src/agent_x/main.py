@@ -1,6 +1,8 @@
 # Copyright (c) Microsoft. All rights reserved.
 # 演習2: MAF で Agent X を構築する (Microsoft Learn MCP 連携付き)
 # Zava カスタマーサポート専門エージェント
+# Exercise 2: Build Agent X with MAF (including Microsoft Learn MCP integration)
+# Specialized Zava customer support agent
 
 import importlib
 import logging
@@ -13,6 +15,9 @@ from dotenv import load_dotenv
 # SDK 互換性フィックス (起動時に1回だけ適用)
 # agent-framework-foundry-hosting が空の ChatOptions を agent.run() に
 # 渡す問題を修正する。ライブラリ側の修正が取り込まれたら削除して良い。
+# SDK compatibility fix (applied once at startup)
+# Fixes an issue where agent-framework-foundry-hosting passes empty ChatOptions
+# to agent.run(). This can be removed after the fix is incorporated upstream.
 # ---------------------------------------------------------------------------
 def _ensure_hosting_compat():
     try:
@@ -53,15 +58,18 @@ from pydantic import Field
 from typing_extensions import Annotated
 
 # .env ファイルから環境変数を読み込み (Foundry 注入の変数が優先される)
+# Load environment variables from .env (variables injected by Foundry take precedence)
 load_dotenv(override=False)
 
 # ログ設定
+# Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 
 # =============================================================================
 # サンプルデータ (本番ではデータベースや API に置き換え)
+# Sample data (replace with a database or API in production)
 # =============================================================================
 
 ORDER_DATABASE = {
@@ -88,6 +96,7 @@ FAQ_DATABASE = {
 
 # =============================================================================
 # ツール定義
+# Tool definitions
 # =============================================================================
 
 @tool(approval_mode="never_require")
@@ -136,11 +145,13 @@ def check_escalation_needed(
     reasons = []
 
     # 感情による判定
+    # Evaluate based on sentiment
     if customer_sentiment in ("negative", "angry"):
         needs_escalation = True
         reasons.append(f"顧客の感情が '{customer_sentiment}' と検知されました")
 
     # キーワードによる判定
+    # Evaluate based on keywords
     for kw in escalation_keywords:
         if kw in issue_description:
             needs_escalation = True
@@ -158,6 +169,7 @@ def check_escalation_needed(
 
 # =============================================================================
 # エージェント & サーバー起動
+# Agent and server startup
 # =============================================================================
 
 AGENT_INSTRUCTIONS = """あなたは Zava 社のカスタマーサポートエージェント「Agent X」です。
@@ -189,6 +201,8 @@ def main():
     """Agent X のエントリーポイント"""
     # ローカル実行時: AZURE_TENANT_ID を設定して正しいテナントを指定
     # Hosted Agent 上では DefaultAzureCredential() のみで OK
+    # For local runs, set AZURE_TENANT_ID to select the correct tenant.
+    # On a Hosted Agent, DefaultAzureCredential() alone is sufficient.
     tenant_id = os.environ.get("AZURE_TENANT_ID")
     credential = AzureCliCredential(tenant_id=tenant_id) if tenant_id else DefaultAzureCredential()
 
@@ -199,11 +213,15 @@ def main():
     )
 
     # ローカルツール
+    # Local tools
     tools = [search_order_history, search_faq, check_escalation_needed]
 
     # Microsoft Learn MCP サーバーを接続 (認証不要)
     # https://learn.microsoft.com/api/mcp で公開されている MCP サーバー
     # ドキュメント検索・コードサンプル検索が利用可能
+    # Connect to the Microsoft Learn MCP server (no authentication required).
+    # This MCP server is available at https://learn.microsoft.com/api/mcp.
+    # It supports documentation and code sample searches.
     microsoft_learn_mcp = client.get_mcp_tool(
         name="MicrosoftLearn",
         url="https://learn.microsoft.com/api/mcp",
@@ -218,10 +236,12 @@ def main():
         instructions=AGENT_INSTRUCTIONS,
         tools=tools,
         # Hosted Agent ではホスティング基盤が会話履歴を管理する
+        # For Hosted Agents, the hosting platform manages conversation history.
         default_options={"store": False},
     )
 
     # Responses プロトコルで HTTP サーバーを起動 (port 8088)
+    # Start an HTTP server using the Responses protocol (port 8088)
     server = ResponsesHostServer(agent)
     print("🚀 Agent X starting on http://localhost:8088")
     print("   POST /responses でリクエストを送信してください")

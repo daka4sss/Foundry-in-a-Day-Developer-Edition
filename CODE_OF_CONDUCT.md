@@ -1,5 +1,7 @@
 # 行動規範 (Code of Conduct)
 
+[English](CODE_OF_CONDUCT_EN.md) | **日本語**
+
 本ワークショップは **Microsoft イベント行動規範** に従って運営されます。
 
 ---

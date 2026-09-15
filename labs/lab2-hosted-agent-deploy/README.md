@@ -1,5 +1,7 @@
 # Lab - Hosted Agent Deploy
 
+[English](README_EN.md) | **日本語**
+
 > Microsoft Agent Framework v1.0 以降の **Agent Skills** 機能を使い、Microsoft Foundry に登録済みの 2 つのエージェントを呼び分ける **オーケストレーションエージェント** を構築し、**Foundry Hosted Agent** としてデプロイするハンズオン。
 
 ## 構成イメージ
@@ -18,7 +20,7 @@
 | オーケストレーションエージェント | 本リポジトリの `Agent` (Foundry の LLM + Agent Skills) |
 | Microsoft 技術専門家エージェント | Foundry に登録済みの既存 Prompt Agent (Microsoft Learn ベース) |
 | Web 検索エージェント | Foundry に登録済みの既存 Prompt Agent (Bing Grounding 等) |
-| ルーティング制御 | [`skills/orchestrator-routing/SKILL.md`](skills/orchestrator-routing/SKILL.md) (Agent Skills) |
+| ルーティング制御 | [`skills/orchestrator-routing/SKILL.md`](agent-src/skills/orchestrator-routing/SKILL.md) (Agent Skills) |
 
 ## 前提
 

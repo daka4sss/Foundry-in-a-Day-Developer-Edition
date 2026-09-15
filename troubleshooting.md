@@ -1,5 +1,7 @@
 # Troubleshooting
 
+[English](troubleshooting_EN.md) | **日本語**
+
 ワークショップで起きやすいトラブルと対応方法をまとめます。
 新しい問題に遭遇したら、TA / 講師に共有のうえこのファイルに追記してください。
 

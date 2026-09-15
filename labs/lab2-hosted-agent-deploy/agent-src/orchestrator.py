@@ -10,6 +10,21 @@
   オーケストレータの ``instructions`` には書かない。代わりに
   ``SkillsProvider`` で読み込む ``skills/orchestrator-routing/SKILL.md``
   に記載し、Agent Skills 機能経由で制御する。
+
+English:
+Orchestrator agent factory.
+
+This file builds the orchestration agent used for both local execution and
+Hosted Agent execution.
+
+Design points:
+- Connect to the existing Foundry-registered agents (the Microsoft technology
+  expert and Web search agents) with ``FoundryAgent``, then convert them into
+  tools with ``.as_tool()``.
+- Do not define the routing logic that selects a tool (subagent) in the
+  orchestrator's ``instructions``. Instead, define it in
+  ``skills/orchestrator-routing/SKILL.md``, which ``SkillsProvider`` loads,
+  and control routing through Agent Skills.
 """
 
 from __future__ import annotations
@@ -24,16 +39,19 @@ from azure.identity import DefaultAzureCredential
 SKILLS_DIR = Path(__file__).parent / "skills"
 
 # サブエージェントの名前 (固定。変更する場合は provision_agents.py も合わせる)
+# Subagent names (fixed; update provision_agents.py as well if these change)
 MS_LEARN_AGENT_NAME = "ms-learn"
 WEB_SEARCH_AGENT_NAME = "web-search"
 
 # 必須の環境変数 (未設定だとオーケストレータを構築できない)
+# Required environment variables (the orchestrator cannot be built if they are unset)
 REQUIRED_ENV_VARS = (
     "FOUNDRY_PROJECT_ENDPOINT",
     "AZURE_AI_MODEL_DEPLOYMENT_NAME",
 )
 
 # 意図的に最小限。ルーティング/出力フォーマットは SKILL.md 側で定義する。
+# Intentionally minimal; routing and output formatting are defined in SKILL.md.
 ORCHESTRATOR_INSTRUCTIONS = (
     "You are an orchestration agent. "
     "Use the available skills to decide how to answer the user."
@@ -65,6 +83,10 @@ def build_orchestrator(credential=None) -> Agent:
     # エージェント名は固定 (`scripts/provision_agents/provision_agents.py` で同名に作成)。
     # agent_version は指定しないと latest にバインドされる。
     # `allow_preview=True` は Foundry のエージェント専用エンドポイントへルーティングするために必要。
+    # --- 1) Convert the subagents (Prompt Agents) into tools ---
+    # Agent names are fixed (created with the same names in `scripts/provision_agents/provision_agents.py`).
+    # Omitting agent_version binds to the latest version.
+    # `allow_preview=True` is required to route to the Foundry agent-specific endpoint.
     ms_learn_agent = FoundryAgent(
         project_endpoint=project_endpoint,
         agent_name=MS_LEARN_AGENT_NAME,
@@ -79,6 +101,7 @@ def build_orchestrator(credential=None) -> Agent:
     )
 
     # SKILL.md からツール名で参照されるので、name を固定する。
+    # Keep each name fixed because SKILL.md references the tools by name.
     ms_learn_tool = ms_learn_agent.as_tool(
         name="ms_learn_agent",
         description=(
@@ -99,6 +122,7 @@ def build_orchestrator(credential=None) -> Agent:
     )
 
     # --- 2) オーケストレータ用 LLM クライアント ---
+    # --- 2) LLM client for the orchestrator ---
     chat_client = FoundryChatClient(
         project_endpoint=project_endpoint,
         model=os.environ["AZURE_AI_MODEL_DEPLOYMENT_NAME"],
@@ -107,9 +131,12 @@ def build_orchestrator(credential=None) -> Agent:
 
     # --- 3) Agent Skills プロバイダー ---
     # 最新 SDK ではファイルベースの skill を `from_paths(...)` で読み込む。
+    # --- 3) Agent Skills provider ---
+    # The latest SDK loads file-based skills with `from_paths(...)`.
     skills_provider = SkillsProvider.from_paths(skill_paths=str(SKILLS_DIR))
 
     # --- 4) オーケストレーションエージェント ---
+    # --- 4) Orchestration agent ---
     return Agent(
         client=chat_client,
         name="OrchestratorAgent",
@@ -118,5 +145,7 @@ def build_orchestrator(credential=None) -> Agent:
         context_providers=[skills_provider],
         # Hosted 実行時、履歴はホスティング基盤側で管理されるため
         # サービス側に保存しない。
+        # When hosted, the hosting platform manages history,
+        # so do not store it in the service.
         default_options={"store": False},
     )

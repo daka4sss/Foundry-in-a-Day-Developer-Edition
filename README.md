@@ -1,5 +1,7 @@
 # Foundry in a Day — Developer Edition
 
+[English](README_EN.md) | **日本語**
+
 > **最先端の エージェント 開発を半日で体験！** 先着 30 名様限定
 
 Microsoft の AI エージェント 開発・運用プラットフォーム **Microsoft Foundry** を半日で体験できるワークショップを開催します。エージェント開発を効率化されたい方はぜひご参加をご検討くださいませ。

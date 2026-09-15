@@ -28,6 +28,39 @@ Microsoft Foundry プロジェクトに作成 (またはバージョン追加) �
   pip install -r requirements.txt
   az login
   python provision_agents.py
+
+English:
+Setup script that creates two Prompt Agents in Foundry.
+
+This script creates (or adds a version to) the following two agents used in
+this workshop in a Microsoft Foundry project:
+
+1. Microsoft technology expert agent (fixed name: ``ms-learn``)
+   - Connects to the Microsoft Learn MCP server
+     (https://learn.microsoft.com/api/mcp) as an ``MCPTool`` and answers
+     questions about Microsoft technology based on Microsoft Learn
+     documentation.
+
+2. Web search agent (fixed name: ``web-search``)
+   - Uses the Foundry Agent Service ``WebSearchTool`` (Bing Search grounding)
+     to answer based on current, general information from the Web.
+
+The agent names are fixed to match the orchestrator
+(``agent-src/orchestrator.py``). Update both locations if you change a name.
+
+This script loads ``.env`` from the repository root and reads only
+``FOUNDRY_PROJECT_ENDPOINT`` and ``AZURE_AI_MODEL_DEPLOYMENT_NAME``.
+
+Usage:
+  cd scripts/provision_agents
+  python -m venv .venv
+  # Windows
+  .\\.venv\\Scripts\\Activate.ps1
+  # Linux / macOS
+  source .venv/bin/activate
+  pip install -r requirements.txt
+  az login
+  python provision_agents.py
 """
 
 from __future__ import annotations
@@ -46,10 +79,12 @@ from azure.identity import DefaultAzureCredential
 from dotenv import find_dotenv, load_dotenv
 
 # サブエージェントの名前 (固定。orchestrator.py の定数と一致させる)
+# Subagent names (fixed; keep them aligned with the constants in orchestrator.py)
 MS_LEARN_AGENT_NAME = "ms-learn"
 WEB_SEARCH_AGENT_NAME = "web-search"
 
 # Microsoft Learn の公開 MCP エンドポイント (認証不要)
+# Public Microsoft Learn MCP endpoint (no authentication required)
 MS_LEARN_MCP_URL = "https://learn.microsoft.com/api/mcp"
 
 MS_LEARN_INSTRUCTIONS = (
@@ -89,6 +124,7 @@ def _create_ms_learn_agent(project: AIProjectClient, *, model: str) -> None:
         server_label="microsoft-learn",
         server_url=MS_LEARN_MCP_URL,
         # オーケストレータから自動で呼び出すため承認は不要
+        # Approval is unnecessary because the orchestrator invokes this automatically.
         require_approval="never",
     )
     agent = project.agents.create_version(
@@ -124,6 +160,7 @@ def _create_web_search_agent(project: AIProjectClient, *, model: str) -> None:
 
 def main() -> None:
     # リポジトリルート (scripts/provision_agents の 2 階層上) の .env を探して読み込む
+    # Find and load .env from the repository root (two levels above scripts/provision_agents).
     load_dotenv(find_dotenv(usecwd=True))
     _require_env()
 

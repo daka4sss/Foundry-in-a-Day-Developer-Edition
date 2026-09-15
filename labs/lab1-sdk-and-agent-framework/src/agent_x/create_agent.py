@@ -1,5 +1,6 @@
 # Copyright (c) Microsoft. All rights reserved.
 # 演習1: Foundry SDK で Prompt Agent を作成する
+# Exercise 1: Create a Prompt Agent using the Foundry SDK
 
 import os
 
@@ -9,6 +10,7 @@ from azure.identity import AzureCliCredential
 from dotenv import load_dotenv
 
 # .env ファイルから環境変数を読み込み
+# Load environment variables from the .env file
 load_dotenv()
 
 PROJECT_ENDPOINT = os.environ["FOUNDRY_PROJECT_ENDPOINT"]
@@ -17,6 +19,7 @@ MODEL_DEPLOYMENT = os.environ.get("AZURE_AI_MODEL_DEPLOYMENT_NAME", "gpt-4.1-min
 TENANT_ID = os.environ.get("AZURE_TENANT_ID")
 
 # Zava カスタマーサポート用のシステムプロンプト
+# System prompt for Zava customer support
 AGENT_INSTRUCTIONS = """あなたは Zava 社のカスタマーサポートエージェントです。
 
 ## 役割
@@ -39,12 +42,14 @@ AGENT_INSTRUCTIONS = """あなたは Zava 社のカスタマーサポートエ�
 def main():
     """Foundry プロジェクトに Prompt Agent を作成する"""
     # プロジェクトクライアントの作成
+    # Create the project client
     project = AIProjectClient(
         endpoint=PROJECT_ENDPOINT,
         credential=AzureCliCredential(tenant_id=TENANT_ID),
     )
 
     # エージェントの作成
+    # Create the agent
     agent = project.agents.create_version(
         agent_name=AGENT_NAME,
         definition=PromptAgentDefinition(

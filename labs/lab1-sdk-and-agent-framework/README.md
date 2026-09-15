@@ -1,5 +1,7 @@
 # Lab 1: Build Agents with Foundry SDK & Microsoft Agent Framework
 
+[English](README_EN.md) | **日本語**
+
 > Foundry SDK / CLI で Prompt Agent を作成し、Microsoft Agent Framework (MAF) でツール付き **Agent X** を構築・呼び出すまでを 1 つの Lab で扱います。
 
 セットアップ・演習の流れは [ルート README](../../README.md) を参照してください。

@@ -7,3 +7,4 @@ dependencies = []
 
 [tool.uv]
 # Lab ごとの依存は labs/labN-*/src/ 配下で個別に追加してください
+# Add dependencies for each lab separately under labs/labN-*/src/.

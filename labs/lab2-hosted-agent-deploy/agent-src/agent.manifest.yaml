@@ -19,6 +19,8 @@ template:
   environment_variables:
     # Foundry プロジェクト内の LLM モデルデプロイ名
     # (`azd ai agent init` 時にモデル選択結果で {{...}} が置換される)
+    # LLM model deployment name in the Foundry project
+    # (`azd ai agent init` replaces {{...}} with the selected model)
     - name: AZURE_AI_MODEL_DEPLOYMENT_NAME
       value: "{{AZURE_AI_MODEL_DEPLOYMENT_NAME}}"
 resources:

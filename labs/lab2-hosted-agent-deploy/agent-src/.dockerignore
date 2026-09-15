@@ -1,5 +1,7 @@
 # 機密や開発成果物をコンテナイメージに焼き込まないようにする
 # (azd deploy → docker build の際に参照される)
+# Prevent secrets and development artifacts from being included in the container image
+# (referenced during azd deploy → docker build)
 .env
 .env.*
 !.env.example
@@ -21,4 +23,5 @@ __pycache__/
 Thumbs.db
 
 # ローカル動作確認用 (Hosted Agent コンテナでは使わない)
+# Used for local testing (not used in the Hosted Agent container)
 local.py

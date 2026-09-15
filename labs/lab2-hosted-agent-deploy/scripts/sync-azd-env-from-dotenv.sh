@@ -25,6 +25,7 @@ echo "Reading $ENV_FILE ..."
 count=0
 while IFS= read -r raw_line || [[ -n "$raw_line" ]]; do
     # 前後空白除去
+    # Remove surrounding whitespace
     line="${raw_line#"${raw_line%%[![:space:]]*}"}"
     line="${line%"${line##*[![:space:]]}"}"
 
@@ -35,11 +36,14 @@ while IFS= read -r raw_line || [[ -n "$raw_line" ]]; do
     key="${line%%=*}"
     val="${line#*=}"
     # キー側の trailing space を除去
+    # Remove trailing whitespace from the key
     key="${key%"${key##*[![:space:]]}"}"
     # 値側の leading space を除去
+    # Remove leading whitespace from the value
     val="${val#"${val%%[![:space:]]*}"}"
 
     # 前後の引用符を除去
+    # Remove surrounding quotation marks
     if [[ ( "$val" == \"*\" && "$val" == *\" ) || ( "$val" == \'*\' && "$val" == *\' ) ]]; then
         val="${val:1:${#val}-2}"
     fi

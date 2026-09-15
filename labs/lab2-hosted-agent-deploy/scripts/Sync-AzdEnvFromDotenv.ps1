@@ -34,6 +34,7 @@ Get-Content -LiteralPath $EnvFile | ForEach-Object {
     $val = $line.Substring($idx + 1).Trim()
 
     # 前後の引用符を除去
+    # Remove surrounding quotation marks
     if (($val.StartsWith('"') -and $val.EndsWith('"')) -or
         ($val.StartsWith("'") -and $val.EndsWith("'"))) {
         $val = $val.Substring(1, $val.Length - 2)
